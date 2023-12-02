@@ -1,0 +1,320 @@
+---
+title: "Data 605 Homework 14 - Taylor Series"
+author: "Jean Jimenez"
+date: "2023-12-02"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(Deriv)
+
+```
+
+# Assignment
+
+This week, we'll work out some Taylor Series expansions of popular functions:
+
+1.  $f(x)=\frac{1}{1-x}$
+
+2.  $f(x)=e^x$
+
+3.  $f(x)=\ln(1+x)$
+
+4.  $f(x)=x^\frac{1}{2}$
+
+For each function, only consider its valid ranges as indicated in the notes when you are computing the Taylor Series expansion. Please submit your assignment as an R- Markdown document.
+
+**Taylor Series Expansion Formula**:
+
+$$
+f(x) = f(a) + f'(a)(x - a) + \frac{f''(a)}{2!}(x - a)^2 + \frac{f'''(a)}{3!}(x - a)^3 + \cdots
+$$
+
+For this Homework, I will make a function that will evaluate and calculate the taylor series of each equation:
+
+## #1
+
+$f(x)=\frac{1}{1-x}$
+
+Visualization:
+
+```{r, echo=FALSE}
+
+x1 = seq(-10, 10, by = 0.01)
+
+y1 = 1 / (1 - x1)
+
+data1 = data.frame(x1, y1)
+
+ggplot(data1, aes(x1, y1)) + 
+    geom_line(color = "red") + 
+    ggtitle("Graph of f(x) = 1/(1-x)") +
+    xlab("x") + 
+    ylab("f(x)") +
+    coord_cartesian(xlim=c(-10,10), ylim = c(-10, 10)) +  # Adjust y-axis limits
+    theme_minimal()
+
+```
+
+As you can see from the graph, the function $f(x)=\frac{1}{1-x}$ has a vertical asymptote at x=1. When x=1, f(x) is undefined.
+
+$\lim_{{x \to 1 ^-}} f(x)=\infty$
+
+$\lim_{{x \to 1 ^+}} f(x)=-\infty$
+
+Lets do Taylor expansion of f(x) at x=0. I will set a=0. I will be calculating up to the 5th derivative.
+
+```{r}
+
+# Define the original function and its derivatives
+f1 = expression(1 / (1 - x))
+d1 = D(f1, "x")
+d2 = D(d1, "x")
+d3 = D(d2, "x")
+d4 = D(d3, "x")
+d5 = D(d4, "x")
+
+# Evaluate each derivative at x = 0
+f1_0 = eval(f1, list(x = 0))
+d1_0 = eval(d1, list(x = 0))
+d2_0 = eval(d2, list(x = 0))
+d3_0 = eval(d3, list(x = 0))
+d4_0 = eval(d4, list(x = 0))
+d5_0 = eval(d5, list(x = 0))
+
+#Taylor expansion function
+taylor_expansion1 = function(x) {
+  f1_0 + d1_0 * x + d2_0 * x^2 / factorial(2) + d3_0 * x^3 / factorial(3) +
+    d4_0 * x^4 / factorial(4) + d5_0 * x^5 / factorial(5)
+}
+
+# original function
+f_original1 = function(x) {
+  1 / (1 - x)
+}
+
+eval1=0
+
+eval1_orig=eval(f_original1(eval1))
+
+eval1_taylor=eval(taylor_expansion1(eval1))
+
+cat("When centered at X=", eval1, "\n the original function outputs:",eval1_orig,". \n", "the taylor expansion outputs:", eval1_taylor,".\n" )
+```
+
+## #2
+
+$f(x)=e^x$
+
+Visualization:
+
+```{r, echo=FALSE}
+
+x2 = seq(-10, 10, by = 0.01)
+
+y2 = exp(x2)
+
+data2 = data.frame(x2, y2)
+
+ggplot(data2, aes(x2, y2)) + 
+    geom_line(color = "green") + 
+    ggtitle("Graph of f(x) = e^x") +
+    xlab("x") + 
+    ylab("f(x)") +
+    coord_cartesian(xlim=c(-10,10), ylim = c(0, 20)) + 
+    theme_minimal()
+
+```
+
+As you can see from the graph, the function $f(x)=e^x$ has a horizontal asymptote at y=0. When f(x)=0, x is undefined.
+
+$\lim_{{x \to - \infty }} f(x)=0$
+
+Lets do Taylor expansion of f(x) at x=0. I will set a=0. I will be calculating up to the 5th derivative.
+
+```{r}
+
+# Define the original function and its derivatives
+f2 = expression(exp(x))
+d21 = D(f2, "x")
+d22 = D(d21, "x")
+d23 = D(d22, "x")
+d24 = D(d23, "x")
+d25 = D(d24, "x")
+
+# Evaluate each derivative at x = 0
+f2_0 = eval(f2, list(x = 0))
+d21_0 = eval(d21, list(x = 0))
+d22_0 = eval(d22, list(x = 0))
+d23_0 = eval(d23, list(x = 0))
+d24_0 = eval(d24, list(x = 0))
+d25_0 = eval(d25, list(x = 0))
+
+#Taylor expansion function
+taylor_expansion2 = function(x) {
+  f2_0 + d21_0 * x + d22_0 * x^2 / factorial(2) + d23_0 * x^3 / factorial(3) +
+    d24_0 * x^4 / factorial(4) + d25_0 * x^5 / factorial(5)
+}
+
+# original function
+f_original2 = function(x) {
+  exp(x)
+}
+
+eval2=0
+
+eval2_orig=eval(f_original2(eval2))
+
+eval2_taylor=eval(taylor_expansion2(eval2))
+
+cat("When centered at X=", eval2, "\n the original function outputs:",eval2_orig,". \n", "the taylor expansion outputs:", eval2_taylor,".\n" )
+```
+
+## #3
+
+$f(x)=\ln(1+x)$
+
+Visualization:
+
+```{r, echo=FALSE}
+
+x3 = seq(-10, 10, by = 0.01)
+
+y3 = log(1+x3)
+
+data3 = data.frame(x3, y3)
+
+ggplot(data3, aes(x3, y3)) + 
+    geom_line(color = "purple") + 
+    ggtitle("Graph of f(x) = ln(1+x)") +
+    xlab("x") + 
+    ylab("f(x)") +
+    coord_cartesian(xlim=c(-2,10),ylim = c(0, 5)) + 
+    theme_minimal()
+
+```
+
+As you can see from the graph, the function $f(x)=\ln(1+x)$ has a verticle asymptote at x=-1. When x=-1, f(x) is undefined.
+
+$\lim_{{x \to - 1^+ }} f(x)=-\infty$
+
+Lets do Taylor expansion of f(x) at x=0. I will set a=0. I will be calculating up to the 5th derivative.
+
+```{r}
+
+# Define the original function and its derivatives
+f3 = expression(log(1+x))
+d31 = D(f3, "x")
+d32 = D(d31, "x")
+d33 = D(d32, "x")
+d34 = D(d33, "x")
+d35 = D(d34, "x")
+
+# Evaluate each derivative at x = 0
+f3_0 = eval(f3, list(x = 0))
+d31_0 = eval(d31, list(x = 0))
+d32_0 = eval(d32, list(x = 0))
+d33_0 = eval(d33, list(x = 0))
+d34_0 = eval(d34, list(x = 0))
+d35_0 = eval(d35, list(x = 0))
+
+#Taylor expansion function
+taylor_expansion3 = function(x) {
+  f3_0 + d31_0 * x + d32_0 * x^2 / factorial(2) + d33_0 * x^3 / factorial(3) +
+    d34_0 * x^4 / factorial(4) + d35_0 * x^5 / factorial(5)
+}
+
+# original function
+f_original3 = function(x) {
+  log(1-x)
+}
+
+eval3=0
+
+eval3_orig=eval(f_original3(eval3))
+
+eval3_taylor=eval(taylor_expansion3(eval3))
+
+cat("When centered at X=", eval3, "\n the original function outputs:",eval3_orig,". \n", "the taylor expansion outputs:", eval3_taylor,".\n" )
+```
+
+## #4
+
+$f(x)=x^\frac{1}{2}$
+
+Visualization:
+
+```{r, echo=FALSE}
+
+x4 = seq(0, 20, by = 0.01)
+
+y4 = x4^0.5
+
+data4 = data.frame(x4, y4)
+
+ggplot(data4, aes(x4, y4)) + 
+    geom_line(color = "brown") + 
+    ggtitle("Graph of f(x) = x^(1/2)") +
+    xlab("x") + 
+    ylab("f(x)") +
+    coord_cartesian(xlim=c(0,20),ylim = c(-10, 10)) + 
+    theme_minimal()
+
+```
+
+As you can see from the graph, the function $f(x)=x^\frac{1}{2}$ has a vertical asymptote at x=0. When x is negative, f(x) is undefined. This is because the square root of a negative number is imaginary. Function only exists from $[0,\infty)$.
+
+Lets do Taylor expansion of f(x) at x=2. I will be calculating up to the 5th derivative.
+
+```{r}
+
+
+f_original4 = function(x) x^0.5
+
+
+d41 = Deriv(f_original4, "x")
+d42 = Deriv(d41, "x")
+d43 = Deriv(d42, "x")
+d44 = Deriv(d43, "x")
+d45 = Deriv(d44, "x")
+d46 = Deriv(d45, "x")
+
+# Evaluate each derivative at x = 1
+eval_point = 1
+d41_0 = d41(eval_point)
+d42_0 = d42(eval_point)
+d43_0 = d43(eval_point)
+d44_0 = d44(eval_point)
+d45_0 = d45(eval_point)
+d46_0 = d46(eval_point)
+
+
+taylor_expansion4 = function(x) {
+  f_original4(eval_point) + 
+  d41_0 * (x - eval_point) +
+  d42_0 / factorial(2) * (x - eval_point)^2 +
+  d43_0 / factorial(3) * (x - eval_point)^3 +
+  d44_0 / factorial(4) * (x - eval_point)^4 +
+  d45_0 / factorial(5) * (x - eval_point)^5 +
+  d46_0 / factorial(6) * (x - eval_point)^6
+}
+
+# Evaluate at x = 2
+eval_point2 = 2
+eval_orig4 = f_original4(eval_point2)
+eval_taylor4 = taylor_expansion4(eval_point2)
+
+# Output results
+cat("When centered at X =", eval_point2, "\nthe original function outputs:", eval_orig4, ".\n", "The Taylor expansion outputs:", eval_taylor4, ".\n")
+
+```
+
+\
+\
